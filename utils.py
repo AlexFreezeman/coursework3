@@ -36,15 +36,25 @@ def get_formatted_data(data):
         from_info, from_bill = "", ""
         if "from" in row:
             sender = row["from"].split()
+            receiver = row["to"].split()
             from_bill = sender.pop(-1)
-            from_bill = f"{from_bill[:4]} {from_bill[4:6]}** **** {from_bill[-4:]}"
+            to_bill = receiver.pop(-1)
+            if "Счет" in sender:
+                from_bill = f"**{from_bill[-4:]}"
+            else:
+                from_bill = f"{from_bill[:4]} {from_bill[4:6]}** **** {from_bill[-4:]}"
             from_info = " ".join(sender)
-        to = f"{row['to'].split()[0]} **{row['to'][-4:]}"
+            if "Счет" in receiver:
+                to_bill = f"**{to_bill[-4:]}"
+            else:
+                to_bill = f"{to_bill[:4]} {to_bill[4:6]}** **** {to_bill[-4:]}"
+            to_info = " ".join(receiver)
+
         operation_amount = f"{row['operationAmount']['amount']} {row['operationAmount']['currency']['name']}"
 
         formatted_data.append(f"""\
 {date} {description}
-{from_info} {from_bill} -> {to}
+{from_info} {from_bill} -> {to_info} {to_bill}
 {operation_amount}""")
 
     return formatted_data
