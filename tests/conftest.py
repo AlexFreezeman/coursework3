@@ -44,4 +44,4 @@ def test_data():
   'operationAmount': {'amount': '79114.93',
                       'currency': {'code': 'USD', 'name': 'USD'}},
   'state': 'EXECUTED',
-  'to': 'Счет 75651667383060284188'}]
+  'to': 'MasterCard 75651667383060284188'}]
