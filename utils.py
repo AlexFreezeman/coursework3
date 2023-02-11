@@ -1,9 +1,13 @@
 import requests
 from datetime import datetime
-from pprint import pprint
 
 
 def get_data(url):
+    """
+    Получает данные с url, выводит ошибку на случай некорректной работы
+    :param url:
+    :return: response or None + info
+    """
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -16,6 +20,12 @@ def get_data(url):
 
 
 def get_filtered_data(data, filtered_empty_from=False):
+    """
+    Фильтрует данные, убирает отмененные операции
+    :param data:
+    :param filtered_empty_from:
+    :return: data
+    """
     data = [x for x in data if "state" in x and x["state"] == "EXECUTED"]
     if filtered_empty_from:
         data = [x for x in data if "from" in x]
@@ -23,12 +33,23 @@ def get_filtered_data(data, filtered_empty_from=False):
 
 
 def get_last_values(data, count_last_values):
+    """
+    Сортирует по дате проведения операции, возвращает в обратном порядке
+    :param data:
+    :param count_last_values:
+    :return: data
+    """
     data = sorted(data, key=lambda x: x["date"], reverse=True)
     data = data[:count_last_values]
     return data
 
 
 def get_formatted_data(data):
+    """
+    Форматирует данные в шаблон (см. README.md)
+    :param data:
+    :return: formatted_data
+    """
     formatted_data = []
     for row in data:
         date = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S.%f").strftime("%d.%m.%Y")
